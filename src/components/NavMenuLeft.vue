@@ -1,8 +1,8 @@
 <template>
   <el-menu :default-active="activeIndex" router @select="handleSelect">
-    <el-menu-item :index="`${parentPath}/dock`">码头信息</el-menu-item>
-    <el-menu-item :index="`${parentPath}/harbor`">港口信息</el-menu-item>
-    <el-menu-item :index="`${parentPath}/region`">地区信息</el-menu-item>
+    <el-menu-item v-for="menu in menuList" :key="menu.path" :index="menu.path">
+      {{ menu.name }}
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -10,16 +10,22 @@
 export default {
   name: "NavMenuTop",
   props: {
-    parentPath: {
-      type: [String],
+    menuList: {
+      type: [Array],
       required: false,
-      default: "",
+      default: () => [],
     },
   },
   data() {
     return {
       activeIndex: "",
     };
+  },
+  computed: {
+    subMenuList() {
+      console.log(this.menuList);
+      return [];
+    },
   },
   methods: {
     handleSelect(key, keyPath) {

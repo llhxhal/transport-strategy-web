@@ -1,41 +1,12 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header height="60px">
-        <NavMenuTop @menuChange="hdlMenuChange" />
-      </el-header>
-      <el-container>
-        <el-aside width="118px">
-          <NavMenuLeft :parentPath="currMenuIndex" />
-        </el-aside>
-        <el-main>
-          <router-view />
-        </el-main>
-      </el-container>
-    </el-container>
+    <router-view />
   </div>
 </template>
 
 <script>
-import NavMenuTop from "@/components/NavMenuTop.vue";
-import NavMenuLeft from "@/components/NavMenuLeft.vue";
-
 export default {
-  name: "app",
-  components: {
-    NavMenuTop,
-    NavMenuLeft,
-  },
-  data() {
-    return {
-      currMenuIndex: "",
-    };
-  },
-  methods: {
-    hdlMenuChange(v) {
-      this.currMenuIndex = v;
-    },
-  },
+  name: "App",
 };
 </script>
 
