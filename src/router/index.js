@@ -11,6 +11,20 @@ const routes = [
     component: HomeView,
   },
   {
+    path: "/baseData",
+    name: "baseData",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/BaseData/LayoutView.vue"
+      ),
+    children: [
+      {
+        path: "profile",
+        // component: UserProfile,
+      },
+    ],
+  },
+  {
     path: "/about",
     name: "about",
     // route level code-splitting
