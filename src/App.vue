@@ -7,6 +7,17 @@
 <script>
 export default {
   name: "App",
+  components: {},
+  directives: {},
+  mixins: [],
+  props: {},
+  data() {
+    return {};
+  },
+  computed: {},
+  watch: {},
+  mounted() {},
+  methods: {},
 };
 </script>
 

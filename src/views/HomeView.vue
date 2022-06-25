@@ -2,36 +2,29 @@
   <div class="home">
     <el-container>
       <el-header height="60px">
-        <div class="logo" @click="hdlRoute({ name: 'home' }, true)">
-          集运管理平台
-        </div>
-        <NavMenuTop
-          :menuList="menuList"
-          :activeIndex="topMenuActiveIndex"
-          @select="hdlTopMenuSelect"
-        />
+        <div class="logo" @click="toRoute({ path: '/' })">集运管理平台</div>
+        <NavMenuTop :menuList="menuList" :activeIndex="topMenuActiveIndex" />
       </el-header>
       <el-container>
         <el-aside width="168px">
           <NavMenuLeft
             :menuList="subMenuList"
             :activeIndex="subMenuActiveIndex"
-            @select="hdlSubMenuSelect"
           />
         </el-aside>
         <el-main>
           <el-tabs
             v-model="tabActiveName"
             type="card"
-            closable
-            @tab-click="hdlTabsClick"
-            @tab-remove="hdlTabsRemove"
+            @tab-click="(tab) => toRoute({ path: tab.name })"
+            @tab-remove="onRemoveTabs"
           >
             <el-tab-pane
-              v-for="tab in tabs"
+              v-for="tab in tabsList"
               :key="tab.name"
               :label="tab.label"
               :name="tab.name"
+              :closable="isNotOnlyOneHomeTab"
             >
               <router-view />
             </el-tab-pane>
@@ -54,9 +47,6 @@ export default {
   },
   data() {
     return {
-      // menu
-      topMenuActiveIndex: "/tranQuery",
-      subMenuActiveIndex: "",
       menuList: [
         {
           name: "运输查询",
@@ -139,71 +129,99 @@ export default {
           ],
         },
       ],
-      // tabs
-      tabActiveName: "/",
-      tabs: [
+      tabsList: [
         {
           label: "首页",
           name: "/",
         },
       ],
+      tabActiveName: "/",
     };
   },
   computed: {
+    // 根据pathes的长度判断路由等级
+    pathes() {
+      return this.$route.path.match(/\/\w+/g);
+    },
+    // 根据路由等级 获取一级菜单索引
+    topMenuActiveIndex() {
+      return this.pathes !== null ? this.pathes[0] : "";
+    },
+    // 根据一级菜单索引 获取二级菜单目录
     subMenuList() {
-      return this.menuList.find(({ path }) => path === this.topMenuActiveIndex)
-        .children;
+      return this.topMenuActiveIndex
+        ? this.menuList.find(({ path }) => path === this.topMenuActiveIndex)
+            .children
+        : [];
+    },
+    // 根据路由等级 获取二级菜单索引
+    subMenuActiveIndex: {
+      get() {
+        if (this.topMenuActiveIndex && this.pathes.length > 1) {
+          return this.pathes[0] + this.pathes[1];
+        } else {
+          return "";
+        }
+      },
+    },
+    // 根据二级菜单索引 获取二级菜单标题
+    subMenuActiveName() {
+      return this.subMenuActiveIndex
+        ? this.subMenuList.find(({ path }) => path === this.subMenuActiveIndex)
+            .name
+        : "";
+    },
+    // 根据路由等级 获取标签页索引
+    tabActiveIndex() {
+      return !this.topMenuActiveIndex ? "/" : this.subMenuActiveIndex;
+    },
+    // 非 唯一 [首页] 标签页
+    isNotOnlyOneHomeTab() {
+      return this.tabsList.length !== 1 || this.tabsList[0].name !== "/";
     },
   },
-  methods: {
-    // route change <<>> menu select <<>> tabs update
-    hdlTopMenuSelect(index) {
-      this.topMenuActiveIndex = index;
+  watch: {
+    $route() {
+      this.onSyncTabs();
     },
-    hdlSubMenuSelect(index) {
-      this.subMenuActiveIndex = index;
-      const activeTab = this.tabs.find(({ name }) => name === index);
-      if (activeTab) {
-        this.tabActiveName = index;
-      } else {
-        this.hdlTabsAdd({
-          label: this.subMenuList.find(({ path }) => path === index).name,
+  },
+  mounted() {
+    this.onSyncTabs();
+  },
+  methods: {
+    // menu.index 绑定 $route.path
+    // 路由改变即可同步数据更新视图
+    // tab.name 绑定 data 绑定 $route.path
+    // 是因为 v-model 绑定计算属性时必须提供setter
+    toRoute(route) {
+      // NavigationDuplicated: Avoided redundant navigation to current location
+      if (route.path === this.tabActiveIndex) return;
+
+      this.$router.push(route);
+    },
+    onSyncTabs() {
+      const index = this.tabActiveIndex;
+      if (!index) return;
+
+      const activeTab = this.tabsList.find(({ name }) => name === index);
+      if (!activeTab) {
+        this.tabsList.push({
+          label: index === "/" ? "首页" : this.subMenuActiveName,
           name: index,
         });
       }
+      this.tabActiveName = index;
     },
-    hdlRoute(route, isHome) {
-      if (isHome) this.topMenuActiveIndex = "/tranQuery";
-      this.$router.push(route);
-    },
-    hdlTabsClick(tab) {
-      // 零宽正预先行断言
-      const regExp = /\/\w+(?=\/)/;
-      const result = tab.name.match(regExp);
-      this.topMenuActiveIndex = result ? result[0] : "/";
-      this.subMenuActiveIndex = tab.name;
-      this.hdlRoute({ path: tab.name });
-    },
-    hdlTabsAdd(newTab) {
-      this.tabs.push(newTab);
-      this.tabActiveName = newTab.name;
-    },
-    hdlTabsRemove(targetName) {
-      let tabs = this.tabs;
-      let activeName = this.tabActiveName;
-      if (activeName === targetName) {
-        tabs.forEach((tab, index) => {
+    onRemoveTabs(targetName) {
+      if (targetName === this.tabActiveIndex) {
+        this.tabsList.forEach((tab, index) => {
           if (tab.name === targetName) {
-            let nextTab = tabs[index + 1] || tabs[index - 1];
-            if (nextTab) {
-              activeName = nextTab.name;
-              this.hdlRoute({ path: activeName });
-            }
+            let nextTab = this.tabsList[index + 1] || this.tabsList[index - 1];
+            this.toRoute({ path: nextTab ? nextTab.name : "/" });
           }
         });
       }
-      this.tabActiveName = activeName;
-      this.tabs = tabs.filter(({ name }) => name !== targetName);
+      this.tabsList = this.tabsList.filter(({ name }) => name !== targetName);
     },
   },
 };

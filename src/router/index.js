@@ -13,7 +13,7 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-    // redirect: "/tranQuery",
+    // redirect: "/tranQuery/strategy",
     children: [
       {
         path: "tranQuery",

@@ -1,5 +1,5 @@
 <template>
-  <el-menu :default-active="activeIndex" router @select="hdlSelect">
+  <el-menu :default-active="activeIndex" router>
     <el-menu-item v-for="menu in menuList" :key="menu.path" :index="menu.path">
       {{ menu.name }}
     </el-menu-item>
@@ -19,11 +19,6 @@ export default {
       type: [String],
       required: true,
       default: "",
-    },
-  },
-  methods: {
-    hdlSelect(index) {
-      this.$emit("select", index);
     },
   },
 };
