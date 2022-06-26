@@ -1,38 +1,42 @@
 <template>
-  <div class="home">
+  <el-container class="home">
+    <el-header>
+      <div class="logo flex-center" @click="toRoute({ path: '/' })">
+        集运管理平台
+      </div>
+      <NavMenuTop :menuList="menuList" :activeIndex="topMenuActiveIndex" />
+      <div class="user-info flex-center">
+        <div class="avator"></div>
+        <div class="name">{{ userName }}</div>
+      </div>
+    </el-header>
     <el-container>
-      <el-header height="60px">
-        <div class="logo" @click="toRoute({ path: '/' })">集运管理平台</div>
-        <NavMenuTop :menuList="menuList" :activeIndex="topMenuActiveIndex" />
-      </el-header>
-      <el-container>
-        <el-aside width="168px">
-          <NavMenuLeft
-            :menuList="subMenuList"
-            :activeIndex="subMenuActiveIndex"
-          />
-        </el-aside>
-        <el-main>
-          <el-tabs
-            v-model="tabActiveName"
-            type="card"
-            @tab-click="(tab) => toRoute({ path: tab.name })"
-            @tab-remove="onRemoveTabs"
+      <el-aside>
+        <NavMenuLeft
+          :menuList="subMenuList"
+          :activeIndex="subMenuActiveIndex"
+        />
+      </el-aside>
+      <el-main>
+        <el-tabs
+          v-model="tabActiveName"
+          type="card"
+          @tab-click="(tab) => toRoute({ path: tab.name })"
+          @tab-remove="onRemoveTabs"
+        >
+          <el-tab-pane
+            v-for="tab in tabsList"
+            :key="tab.name"
+            :label="tab.label"
+            :name="tab.name"
+            :closable="isNotOnlyOneHomeTab"
           >
-            <el-tab-pane
-              v-for="tab in tabsList"
-              :key="tab.name"
-              :label="tab.label"
-              :name="tab.name"
-              :closable="isNotOnlyOneHomeTab"
-            >
-              <router-view />
-            </el-tab-pane>
-          </el-tabs>
-        </el-main>
-      </el-container>
+            <router-view />
+          </el-tab-pane>
+        </el-tabs>
+      </el-main>
     </el-container>
-  </div>
+  </el-container>
 </template>
 
 <script>
@@ -57,6 +61,7 @@ export default {
               path: "/tranQuery/strategy",
             },
           ],
+          userName: "admin",
         },
         {
           name: "基础资料",
@@ -136,6 +141,7 @@ export default {
         },
       ],
       tabActiveName: "/",
+      userName: "admin",
     };
   },
   computed: {
@@ -227,16 +233,40 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.el-header {
-  display: flex;
-  align-items: center;
-  .logo {
-    width: 148px;
-    cursor: pointer;
+<style lang="scss">
+@import "@/assets/css/base";
+
+.home {
+  height: 100%;
+  background: $background;
+  & > .el-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: $margin-mini;
+    padding: 0;
+    height: $header-height !important;
+    color: $white;
+    background: $dark-blue;
+    .logo {
+      width: $aside-width;
+      height: 100%;
+      cursor: pointer;
+    }
+    .el-menu {
+      flex: 1;
+    }
+    .user-info {
+      width: 100px;
+      height: 100%;
+      cursor: pointer;
+    }
   }
-  .el-menu {
-    flex: 1;
+  .el-main {
+    margin-left: $margin-mini;
+    padding: 0;
+  }
+  .el-aside {
+    width: $aside-width !important;
   }
 }
 </style>
