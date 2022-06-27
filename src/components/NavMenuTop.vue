@@ -29,17 +29,20 @@ export default {
 
 .el-menu {
   background: transparent;
-  &--horizontal {
-    border-bottom: none !important;
-  }
-  & > &-item {
-    color: $white;
-    &:not(.is-disabled) {
-      &.is-active,
-      &:hover,
-      &:focus {
-        color: $white !important;
-        background: $light-blue !important;
+  &.el-menu--horizontal {
+    border-bottom: none;
+    & > .el-menu-item {
+      height: $top-menu-height;
+      line-height: $top-menu-height;
+      border-bottom: none;
+      color: $white;
+      &:not(.is-disabled) {
+        &:hover,
+        &:focus,
+        &.is-active {
+          color: $white;
+          background: $light-blue;
+        }
       }
     }
   }

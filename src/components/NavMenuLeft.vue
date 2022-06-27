@@ -24,4 +24,20 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import "@/assets/css/base";
+
+.el-menu {
+  &-item {
+    height: $sub-menu-height;
+    line-height: $sub-menu-height;
+    border-bottom: 1px solid $light-gray;
+    &:hover,
+    &:focus,
+    &.is-active {
+      color: $white;
+      background: $light-blue;
+    }
+  }
+}
+</style>

@@ -261,12 +261,32 @@ export default {
       cursor: pointer;
     }
   }
-  .el-main {
-    margin-left: $margin-mini;
-    padding: 0;
-  }
-  .el-aside {
-    width: $aside-width !important;
+  & > .el-container {
+    .el-aside {
+      width: $aside-width !important;
+      margin-right: $margin-mini;
+      .el-menu {
+        height: 100%;
+      }
+    }
+    .el-main {
+      padding: 0;
+      .el-tabs {
+        &__header {
+          border-bottom: 1px solid $white;
+        }
+        &__nav {
+          border: none;
+        }
+        &__item {
+          border-radius: 8px 8px 0 0;
+          background: $white;
+          &:not(:last-child) {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
   }
 }
 </style>
