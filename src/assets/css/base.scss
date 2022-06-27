@@ -11,3 +11,10 @@ body {
   align-items: center;
   justify-content: center;
 }
+.el-form {
+  &-item {
+    .el-input {
+      width: $input-width;
+    }
+  }
+}

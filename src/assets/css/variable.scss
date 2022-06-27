@@ -1,12 +1,17 @@
-// size
+// layout size
 $margin-mini: 10px !default;
 $padding-mini: 10px !default;
 $header-height: 50px !default;
 $aside-width: 168px !default;
+// menu size
 $top-menu-height: $header-height !default;
 $sub-menu-height: 40px !default;
+// tabs size
 $tabs-item-padding: 0 30px;
 $tabs-item-height: $sub-menu-height !default;
+// form size
+$input-width: 150px !default;
+
 // color
 $el-blue: #409EFF !default;
 $background: #e3eaf6 !default;

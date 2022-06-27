@@ -4,9 +4,16 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    province: [],
+  },
   getters: {},
-  mutations: {},
+  mutations: {
+    getProvince(state, payload) {
+      console.log(`payload: ${payload}`);
+      return state.province.push({ name: "广东省" });
+    },
+  },
   actions: {},
   modules: {},
 });
