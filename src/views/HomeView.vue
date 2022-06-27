@@ -233,13 +233,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import "@/assets/css/base";
+<style lang="scss" scoped>
+@import "@/assets/css/variable";
 
 .home {
   height: 100%;
   background: $background;
-  & > .el-header {
+  .el-header {
     display: flex;
     align-items: center;
     margin-bottom: $margin-mini;
@@ -261,7 +261,7 @@ export default {
       cursor: pointer;
     }
   }
-  & > .el-container {
+  .el-container {
     .el-aside {
       width: $aside-width !important;
       margin-right: $margin-mini;
@@ -271,18 +271,42 @@ export default {
     }
     .el-main {
       padding: 0;
-      .el-tabs {
+      ::v-deep .el-tabs {
+        height: 100%;
         &__header {
+          margin-bottom: $margin-mini;
           border-bottom: 1px solid $white;
+          .el-tabs__nav {
+            border: none;
+            .el-tabs__item {
+              padding: $tabs-item-padding;
+              height: $tabs-item-height;
+              line-height: $tabs-item-height;
+              border-radius: 8px 8px 0 0;
+              background: $white;
+              &:not(:last-child) {
+                margin-right: 4px;
+              }
+              &.is-active {
+                color: $white;
+                background: $light-blue;
+              }
+              &.is-closable {
+                .el-icon-close {
+                  position: absolute;
+                  top: 50%;
+                  right: 6px;
+                  transform: translate(0, -50%);
+                }
+              }
+            }
+          }
         }
-        &__nav {
-          border: none;
-        }
-        &__item {
-          border-radius: 8px 8px 0 0;
+        &__content {
+          height: calc(100% - $tabs-item-height - $margin-mini);
           background: $white;
-          &:not(:last-child) {
-            margin-right: 4px;
+          .el-tab-pane {
+            padding: $padding-mini;
           }
         }
       }

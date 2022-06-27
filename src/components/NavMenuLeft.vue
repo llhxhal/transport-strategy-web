@@ -32,7 +32,11 @@ export default {
     height: $sub-menu-height;
     line-height: $sub-menu-height;
     border-bottom: 1px solid $light-gray;
-    &:hover,
+    text-align: center;
+    &:hover {
+      color: $el-blue;
+      background: transparent;
+    }
     &:focus,
     &.is-active {
       color: $white;
